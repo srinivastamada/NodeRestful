@@ -38,6 +38,21 @@ server.route({
     }
 });
 
+server.route({
+    method: 'POST',
+    path: '/usernames',
+    handler: function (request, reply) {
+
+        connection.query('SELECT username FROM users', function (error, results, fields) {
+            if (error) throw error;
+            console.log(results);
+            reply(results);
+        });
+        connection.end();
+        // return reply('hello world');
+    }
+});
+
 
 
 // Start the server
