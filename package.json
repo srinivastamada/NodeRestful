@@ -1,0 +1,19 @@
+{
+  "name": "noderestful",
+  "version": "1.0.0",
+  "description": "Node Restful",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "restful"
+  ],
+  "author": "Srinivas Tamada",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^16.1.0",
+    "mysql": "^2.13.0"
+  }
+}
