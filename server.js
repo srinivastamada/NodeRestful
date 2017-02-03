@@ -1,13 +1,14 @@
 'use strict';
 
 const Hapi = require('hapi');
-const mysql = require('mysql');
+const MySQL = require('mysql');
 const Joi = require('joi');
+const Bcrypt = require('bcrypt');
 // Create a server with a host and port
 const server = new Hapi.Server();
 
 
-const connection = mysql.createConnection({
+const connection = MySQL.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
@@ -63,24 +64,63 @@ server.route({
 });
 
 
+// username: Joi.string().alphanum().min(3).max(30).required(),
+//     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+//     access_token: [Joi.string(), Joi.number()],
+//     birthyear: Joi.number().integer().min(1900).max(2013),
+//     email: Joi.string().email()
+
+server.route({
+    method: 'POST',
+    path: '/signup',
+
+    handler: function (request, reply) {
+
+        const username = request.payload.username;
+        const email = request.payload.email;
+        const password = request.payload.password;
+
+        var salt = Bcrypt.genSaltSync();
+        var encryptedPassword = Bcrypt.hashSync(password, salt);
+
+        var x = Bcrypt.compareSync(password, encryptedPassword);
+
+        connection.query('INSERT INTO users (username,email,passcode) VALUES ("' + username + '","' + email + '","' + encryptedPassword + '")', function (error, results, fields) {
+            if (error) throw error;
+            console.log(results);
+            reply(results);
+        });
+
+    },
+    config: {
+        validate: {
+            payload: {
+                username: Joi.string().alphanum().min(3).max(30).required(),
+                email: Joi.string().email(),
+                password: Joi.string().regex(/^[a-zA-Z0-9]{8,30}$/)
+            }
+        }
+
+    }
+});
 
 server.route({
     method: 'POST',
     path: '/messages',
+
+    handler: function (request, reply) {
+
+        const uid = request.payload.uid;
+        console.log(uid);
+
+        connection.query('SELECT * FROM messages WHERE uid_fk = "' + uid + '"', function (error, results, fields) {
+            if (error) throw error;
+            console.log(results);
+            reply(results);
+        });
+
+    },
     config: {
-        handler: function (request, reply) {
-
-            const uid = request.payload.uid;
-            console.log(uid);
-
-            connection.query('SELECT * FROM messages WHERE uid_fk = "' + uid + '"', function (error, results, fields) {
-                if (error) throw error;
-                console.log(results);
-                reply(results);
-            });
-
-        },
-
         validate: {
             payload: {
                 uid: Joi.number().integer()
@@ -88,18 +128,36 @@ server.route({
         }
 
     }
-
 });
 
 server.route({
     method: 'DELETE',
-    path: '/user/{id}',
+    path: '/message/{uid}/{mid}',
     handler: function (request, reply) {
-        // if (quotes.length <= request.params.id) {
-        //   return reply('No quote found.').code(404);
-        // }
-        // quotes.splice(req.params.id, 1);
-        // reply(true);
+        const uid = request.params.uid;
+        const mid = request.params.mid;
+
+        console.log(uid + "---" + mid);
+
+        connection.query('DELETE FROM messages WHERE uid_fk = "' + uid + '"AND mid = "' + mid + '"', function (error, result, fields) {
+            if (error) throw error;
+
+            if (result.affectedRows) {
+                reply(true);
+            } else {
+                reply(false);
+            }
+
+        });
+    },
+    config: {
+        validate: {
+            params: {
+                uid: Joi.number().integer(),
+                mid: Joi.number().integer()
+            }
+        }
+
     }
 });
 
