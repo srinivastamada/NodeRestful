@@ -25,7 +25,7 @@ http://localhost:8000/helloworld
 ```
 
 
-Tutorial: <a href="http://www.9lessons.info/2017/02/create-restful-api-nodejs-mysql.html">http://www.9lessons.info/2017/02/create-restful-api-nodejs-mysql.html</a>
+Tutorial: <a href="http://www.9lessons.info/2017/02/create-restful-api-nodejs-mysql.html">Create a RESTful API using NodeJS and MySQL Database</a>
 
 ##GET
 
