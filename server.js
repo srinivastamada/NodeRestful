@@ -53,7 +53,7 @@ server.route({
     handler: function (request, reply) {
         const uid = request.params.uid;
 
-        connection.query('SELECT uid, username FROM users WHERE uid = "' + uid + '"', function (error, results, fields) {
+        connection.query('SELECT uid, username, email FROM users WHERE uid = "' + uid + '"', function (error, results, fields) {
             if (error) throw error;
             console.log(results);
             reply(results);
@@ -123,7 +123,7 @@ server.route({
         validate: {
             payload: {
                 uid: Joi.number().integer(),
-                message: Joi.string()
+                message: [Joi.string(), Joi.number()]
             }
         }
 
