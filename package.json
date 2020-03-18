@@ -1,6 +1,6 @@
 {
   "name": "noderestful",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Node Restful",
   "main": "index.js",
   "scripts": {
@@ -13,9 +13,9 @@
   "author": "Srinivas Tamada",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^1.0.2",
-    "hapi": "^17.0.0",
-    "joi": "^10.6.0",
-    "mysql": "^2.16.0"
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/joi": "^17.1.1",
+    "bcrypt": "^4.0.1",
+    "mysql": "^2.18.1"
   }
 }
