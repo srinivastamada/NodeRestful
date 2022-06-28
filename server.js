@@ -168,11 +168,7 @@ server.route({
         connection.query('DELETE FROM messages WHERE uid_fk = "' + uid + '"AND mid = "' + mid + '"', function (error, result, fields) {
             if (error) throw error;
 
-            if (result.affectedRows) {
-                reply(true);
-            } else {
-                reply(false);
-            }
+            reply(result.affectedRows);
 
         });
     },
